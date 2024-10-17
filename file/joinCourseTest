@@ -1,0 +1,86 @@
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class joinCourseTest {
+
+    @Test
+    public void testAddCourseSuccess() throws IOException {
+    	Student testStudent = new Student("test@email.com", "testPassword");
+        JoinCourse yourClass = new JoinCourse(testStudent);
+        yourClass.setStudentList(new ArrayList());
+        yourClass.setCourseList(new ArrayList());
+  
+      
+
+     
+        
+        Course testCourse = new Course("Test Course", "Course Description", "Test Lecturer", "10:00 AM", "Room 101", new Date());
+
+
+        yourClass.getStudents().add(testStudent);
+        ((joinCourse) yourClass).getCourses().add(testCourse);
+
+        assertFalse(yourClass.isRegistered(testCourse)); 
+
+        assertTrue(yourClass.addCourse("Test Course"));
+
+     
+        assertTrue(yourClass.isRegistered(testCourse));
+        assertEquals(1, testCourse.getStudentNumber());
+    }
+
+    @Test
+    public void testAddCourseFailureCourseNotFound() throws IOException {
+    	Student testStudent = new Student("test@email.com", "testPassword");
+        JoinCourse yourClass = new JoinCourse(testStudent);
+
+       
+        yourClass.setStudentList(new ArrayList<Student>());
+        yourClass.setCourseList(new ArrayList<Course>());
+
+       Course testCourse = new Course("Test", "Course Description", "Test Lecturer", "10:00 AM", "Room 101", new Date());
+    
+        yourClass.getStudents().add(testStudent);
+
+        yourClass.getCourses().add(testCourse);
+        assertFalse(yourClass.addCourse("Nonexistent Course")); 
+
+       
+        
+        assertTrue(((Student) yourClass.getStudents().get(0)).getCourses().isEmpty());
+        
+    }
+
+    @Test
+    public void testAddCourseFailureAlreadyRegistered() throws IOException {
+    	Student testStudent = new Student("test@email.com", "testPassword");
+        JoinCourse yourClass = new JoinCourse(testStudent);
+
+        
+        yourClass.setStudentList(new ArrayList());
+        yourClass.setCourseList(new ArrayList());
+
+       
+        Course testCourse = new Course("Test Course", "Course Description", "Test Lecturer", "10:00 AM", "Room 101", new Date());
+
+  
+        yourClass.getStudents().add(testStudent);
+        yourClass.getCourses().add(testCourse);
+
+       
+        yourClass.addCourse("Test Course");
+
+        assertFalse(yourClass.addCourse("Test Course")); 
+
+       
+        assertEquals(1, testCourse.getStudentNumber());
+    }
+
+   
+
+}

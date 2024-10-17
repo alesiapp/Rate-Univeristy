@@ -1,0 +1,97 @@
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import java.awt.GridLayout;
+
+public class CourseDetails extends JFrame implements ActionListener{
+	private ArrayList<Course> courseList=new ArrayList<Course>();
+	JFrame frame=new JFrame();
+	JButton button[];
+	CourseDetails(){
+		
+		readCourses();
+		button=new JButton[courseList.size()];
+		this.setLayout(new GridLayout());
+		for(int i=0;i<courseList.size();i++) {
+			String name=courseList.get(i).getCourseName();
+		 button[i]=new JButton(name);
+		 button[i].addActionListener(this);
+			this.add(button[i]);
+			
+		}
+		this.setVisible(true);
+		this.setResizable(false);
+		this.setSize(500,500);
+                 this.setTitle("COURSE DETAILS");
+		
+		
+	}
+	
+	
+	
+	
+	
+	public void readCourses() {
+		boolean cont = true;
+        try (ObjectInputStream input = new ObjectInputStream(new FileInputStream("Kurs.txt"))) {
+            while(cont){
+                  Object obj=null;
+                try {
+                    obj = input.readObject();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+	            }catch (EOFException e) {
+	            	e.getMessage();
+	            	break;
+	            }
+                
+                  if(obj != null)
+                     courseList.add((Course) obj);
+                  else
+                     cont = false;
+               }
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+	}
+
+
+
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		for(int i=0;i<courseList.size();i++) {
+			if(e.getSource()==button[i]) {
+				new showDetails(courseList.get(i));
+			}
+		}
+		
+	}
+	
+	public static void main(String args[]) {
+		new CourseDetails();
+	}
+
+	public ArrayList<Course> getCourseList() {
+		// TODO Auto-generated method stub
+		return courseList;
+	}
+
+}
+
